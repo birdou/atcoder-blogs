@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -63,8 +64,8 @@ func createUsersTable(db *gorm.DB) {
 }
 
 func main() {
+	godotenv.Load()
 	db := connectDB()
-
 	// マイグレーション関数を順に呼び出す
 	initDatabase(db)
 	createProblemDifficultiesTable(db)
