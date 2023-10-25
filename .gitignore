@@ -1,0 +1,7 @@
+**/.env
+**/cert/**
+**/docker-compose.prod.yml
+**/server.log
+**/atcoder-blogs-frontend/build/**
+**/node_modules/**
+**/nginx/prod/**

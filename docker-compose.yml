@@ -1,0 +1,56 @@
+version: "3"
+services: 
+  frontend:
+    container_name: atcoder-blogs-frontend
+    build:
+      context: ./docker/frontend/
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./app:/work
+      - atcoder-blogs-react-node-modules:/work/atcoder-blogs-frontend/node_modules
+    ports:
+      - 3000:3000
+    environment:
+      - PORT=3000
+    working_dir: /work/atcoder-blogs-frontend
+    #command: npm start
+  backend:
+    container_name: atcoder-blogs-backend
+    build:
+      context: ./docker/backend/
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+      - ./app:/work
+    env_file:
+      - ./docker/backend/.go_env
+    ports:
+      - 3001:3001
+    working_dir: /work/atcoder-blogs-backend
+    #command: go run main.go
+  nginx:
+    build: ./docker/nginx/dev
+    ports:
+      - "80:80"
+    volumes:
+      - ./app/cert:/etc/nginx/cert
+  db:
+    container_name: atcoder-blogs-db
+    build:
+      context: ./docker/db/
+      dockerfile: Dockerfile
+    platform: linux/x86_64
+    tty: true
+    ports:
+      - 3306:3306
+    env_file:
+      - ./docker/db/.env
+    volumes:
+      - atcoder-blogs-mysql:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
+volumes:
+  atcoder-blogs-mysql:
+    name: atcoder-blogs-mysql-volume
+  atcoder-blogs-react-node-modules:
+    name: atcoder-blogs-react-node-modules
